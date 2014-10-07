@@ -42,19 +42,39 @@ RSpec.describe 'all the things', type: :request do
     let!(:car_1) { Car.create!(levels: [3]   , description: "Audi A3 Sportback S line 1.8 TFSI 6 speed", price_cents: 3400000) }
 
     describe '#create' do
-      let(:car_config) do
-        {
-          car_id: car_1.id,
-          leasing_period: 24,
-          leasing_km: 20_000,
-          package: 'p1',
-        }
+
+      context 'valid' do
+        let(:car_config) do
+          {
+            car_id: car_1.id,
+            leasing_period: 24,
+            leasing_km: 20_000,
+            package: 'p1',
+          }
+        end
+
+        it 'create some config for you' do
+          post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
+          expect(response.status).to eq(201)
+        end
       end
 
-      it 'create some config for you' do
-        post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
-        expect(json(response.body)).to eq("")
+      context 'invalid' do
+        let(:car_config) do
+          {
+            car_id: car_1.id,
+            leasing_period: 240,
+            leasing_km: 999999999,
+            package: 'p2',
+          }
+        end
+
+        it 'says unprocessable' do
+          post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
+          expect(response.status).to eq(422)
+        end
       end
+
     end
 
   end

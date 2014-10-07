@@ -8,4 +8,8 @@ class Car < ActiveRecord::Base
   def as_json(options={})
     { description: description, levels: levels, price: price.to_s }
   end
+
+  def formatted_price
+    price.format(no_cents: true, symbol: false, thousands_separator: false)
+  end
 end

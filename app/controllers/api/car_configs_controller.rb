@@ -3,11 +3,13 @@ module API
 
     def create
       @car_config = CarConfig.new(car_config_params)
+
+      @car_config.calculate
       if @car_config.valid_for_user?(@user)
         @car_config.save
         render json: @car_config, status: :created
       else
-        #errrrror
+        render json: @car_config.errors, status: :unprocessable_entity
       end
     end
 
