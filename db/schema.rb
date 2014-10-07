@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20141007131801) do
     t.integer  "leasing_period"
     t.integer  "leasing_km"
     t.string   "package"
-    t.integer  "leasing_rate_cents"
+    t.integer  "leasing_rate_cents", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

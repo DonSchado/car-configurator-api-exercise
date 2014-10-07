@@ -56,10 +56,11 @@ RSpec.describe 'all the things', type: :request do
         it 'create some config for you' do
           post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
           expect(response.status).to eq(201)
+          expect(json(response.body)[:leasing_rate]).to eq("€708.00")
         end
       end
 
-      context 'invalid' do
+      context 'invalid (external API)' do
         let(:car_config) do
           {
             car_id: car_1.id,
@@ -69,9 +70,30 @@ RSpec.describe 'all the things', type: :request do
           }
         end
 
-        it 'says unprocessable' do
+        it 'is unprocessable' do
           post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
           expect(response.status).to eq(422)
+          expect(json(response.body)).to eq(:base => ["Illegal number of kilometers (2112)", "Illegal period (2132)"])
+        end
+      end
+
+      context 'invalid because of users leasing_rate_limit' do
+        let!(:user) { User.create! email: "l3@mycars.com", password: 'secret', level: 3, permission: true }
+        let!(:car_2) { Car.create!(levels: [2,3] , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000) }
+
+        let(:car_config) do
+          {
+            car_id: car_2.id,
+            leasing_period: 24,
+            leasing_km: 20_000,
+            package: 'p2',
+          }
+        end
+
+        it 'exceeds the users leasing_rate_limit' do
+          post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
+          expect(response.status).to eq(422)
+          expect(json(response.body)).to eq(leasing_limit: ['over limit'])
         end
       end
 

@@ -4,8 +4,10 @@ module API
     def create
       @car_config = CarConfig.new(car_config_params)
 
+      # the following lines lack abstraction!
       @car_config.calculate
-      if @car_config.valid_for_user?(@user)
+      @car_config.validate_for_user(@user)
+      if @car_config.errors.none?
         @car_config.save
         render json: @car_config, status: :created
       else

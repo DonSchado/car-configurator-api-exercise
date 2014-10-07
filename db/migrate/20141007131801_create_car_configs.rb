@@ -5,7 +5,7 @@ class CreateCarConfigs < ActiveRecord::Migration
       t.integer :leasing_period
       t.integer :leasing_km
       t.string :package
-      t.integer :leasing_rate_cents
+      t.integer :leasing_rate_cents, default: 0
 
       t.timestamps
     end

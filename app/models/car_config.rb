@@ -16,13 +16,12 @@ class CarConfig < ActiveRecord::Base
     end
   end
 
-  def valid_for_user?(user)
-    errors.none?
+  def validate_for_user(user)
+    errors.add(:leasing_limit, 'over limit') if leasing_rate > user.limit
   end
 
-
   def connection
-    @connection ||= Faraday.new(url: "http://leasing-rate-calculator.herokuapp.com") do |faraday|
+    @connection ||= Faraday.new(url: 'http://leasing-rate-calculator.herokuapp.com') do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
@@ -30,5 +29,9 @@ class CarConfig < ActiveRecord::Base
 
   def leasing_rate_calculator_url
     "/?price=#{car.formatted_price}&period=#{leasing_period}&kilometers=#{leasing_km}"
+  end
+
+  def as_json(options={})
+    { leasing_period: leasing_period, leasing_km: leasing_km, package: package, leasing_rate: leasing_rate.format }
   end
 end
