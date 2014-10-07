@@ -56,6 +56,15 @@ GEM
     method_source (0.8.2)
     mime-types (2.3)
     minitest (5.4.2)
+    monetize (0.3.0)
+      money (~> 6.1.0.beta1)
+    money (6.1.1)
+      i18n (~> 0.6.4)
+    money-rails (0.12.0)
+      activesupport (>= 3.0)
+      monetize (~> 0.3.0)
+      money (~> 6.1.1)
+      railties (>= 3.0)
     multi_json (1.10.1)
     pg (0.17.1)
     pry (0.10.1)
@@ -130,6 +139,7 @@ DEPENDENCIES
   factory_girl
   jbuilder (~> 2.0)
   jquery-rails
+  money-rails
   pg
   pry
   rails (= 4.1.6)
