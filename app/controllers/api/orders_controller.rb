@@ -9,6 +9,13 @@ module API
       end
     end
 
+    def show
+      @order = Order.find(params[:id])
+      render json: @order, status: 200
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: 'no such order for you my friend!'}, status: 404
+    end
+
     private
 
     def order_params

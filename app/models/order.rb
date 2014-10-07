@@ -8,6 +8,6 @@ class Order < ActiveRecord::Base
   end
 
   def set_init_status
-    self.status = 'created'
+    self.status = 'created' unless status.present?
   end
 end

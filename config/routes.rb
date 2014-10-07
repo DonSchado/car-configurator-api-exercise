@@ -5,5 +5,7 @@ Rails.application.routes.draw do
     resources :car_configs, only: :create do
       resource :order, only: :create
     end
+
+    resources :orders, only: :show
   end
 end

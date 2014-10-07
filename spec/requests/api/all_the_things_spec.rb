@@ -117,4 +117,30 @@ RSpec.describe 'all the things', type: :request do
     end
   end
 
+
+  describe 'order#status' do
+    let(:user) { User.create! email: 'l1@mycars.com', password: 'secret', level: 1, permission: true }
+    let(:car) { Car.create!(levels: [2,3] , description: 'Audi A4 Avant Black Edition 2.0 TDI multitronic', price_cents: 3200000) }
+    let(:car_config) { CarConfig.create!(car_id: car.id, leasing_period: 24, leasing_km: 100000, package: 'p1', leasing_rate_cents: 1000) }
+    let!(:order) { car_config.orders.create(address: 'fooo', car_house: 'bar', status: 'available soon') }
+
+    context 'success' do
+      it 'tells you something about its status' do
+        get "/orders/#{order.id}", {}, { 'Authorization' => encode(user.email, user.password) }
+        expect(response.status).to eq(200)
+        expect(json(response.body)[:status]).to eq('available soon')
+      end
+    end
+
+    context 'not there' do
+      it 'is four-oh-four' do
+        get "/orders/1337", {}, { 'Authorization' => encode(user.email, user.password) }
+        expect(response.status).to eq(404)
+        expect(json(response.body)).to eq(error: 'no such order for you my friend!')
+      end
+    end
+
+
+  end
+
 end
