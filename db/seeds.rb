@@ -1,3 +1,4 @@
+DatabaseCleaner.clean_with :truncation
 
 Car.create! levels: [3]      , description: "Audi A3 Sportback S line 1.8 TFSI 6 speed", price_cents: 3400000
 Car.create! levels: [2,3]    , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000
@@ -11,3 +12,10 @@ Car.create! levels: [1,2,3]  , description: "VW Passat Trendline 2.0 TDI BlueMot
 Car.create! levels: [1,2, 3] , description: "Mercedes E 220 BlueTEC Limousine ", price_cents: 4412000
 Car.create! levels: [1]      , description: "Mercedes E 500 4MATIC Limousine ", price_cents: 7363100
 Car.create! levels: [1]      , description: "Mercedes S 300 BlueTEC HYBRID Limousine ", price_cents: 8092000
+
+
+User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true
+User.create! email: "l2@mycars.com", password: 'secret', level: 2, permission: true
+User.create! email: "l3@mycars.com", password: 'secret', level: 3, permission: true
+User.create! email: "l0@mycars.com", password: 'secret', level: 0, permission: false
+

@@ -15,5 +15,6 @@ group :test, :development do
   gem 'rspec-rails'
   gem 'factory_girl'
   gem 'pry'
+  gem 'database_cleaner'
   # gem 'guard'
 end
