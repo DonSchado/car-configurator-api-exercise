@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141007121209) do
+ActiveRecord::Schema.define(version: 20141007131801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "car_configs", force: true do |t|
+    t.integer  "car_id"
+    t.integer  "leasing_period"
+    t.integer  "leasing_km"
+    t.string   "package"
+    t.integer  "leasing_rate_cents"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cars", force: true do |t|
     t.text     "levels"
