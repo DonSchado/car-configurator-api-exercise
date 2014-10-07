@@ -1,5 +1,6 @@
 class CarConfig < ActiveRecord::Base
   belongs_to :car
+  has_many :orders
 
   monetize :leasing_rate_cents, as: 'leasing_rate'
 

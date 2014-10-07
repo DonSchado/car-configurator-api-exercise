@@ -96,10 +96,25 @@ RSpec.describe 'all the things', type: :request do
           expect(json(response.body)).to eq(leasing_limit: ['over limit'])
         end
       end
-
     end
-
   end
 
+  describe 'order the car_config' do
+    let(:user) { User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true }
+    let(:car) { Car.create!(levels: [2,3] , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000) }
+    let(:car_config) { CarConfig.create!(car_id: car.id, leasing_period: 24, leasing_km: 100000, package: 'p1', leasing_rate_cents: 1000) }
+    let(:order) do
+      {
+        address: 'somewhere',
+        car_house: 'foo',
+      }
+    end
+
+    it 'exceeds the users leasing_rate_limit' do
+      post "/car_configs/#{car_config.id}/order", { order: order }, { 'Authorization' => encode(user.email, user.password) }
+      expect(response.status).to eq(201)
+      expect(json(response.body)).to match(id: be_a(Integer), status: 'created', car_house: 'foo', address: 'somewhere')
+    end
+  end
 
 end
