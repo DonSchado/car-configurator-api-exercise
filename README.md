@@ -26,7 +26,7 @@ The employee can check the  status of an order
 #### Management Levels:
   * Level 1 - upper management (limit. € 1200 lease rate / month)
   * Level 2 - middle management (limit: 800 € lease rate / month.)
-  *￼ Level 3 - lower management (limit: 600 € lease rate / month.)
+  * Level 3 - lower management (limit: 600 € lease rate / month.)
 
 #### Vehicles for corresponding levels where [1,2] => level 1, level 2
   * [3] Audi A3 Sportback S line 1.8 TFSI 6 speed (€ 34,000)
@@ -48,7 +48,7 @@ The employee can check the  status of an order
   For this functionality, a mock service is provided which calculates the lease rate. This query expects three parameters (price - the list price of the vehicle in Euros, kilometers - the mileage in km and period - the lease term in months) and are either the price as JSON back or an array of errors.
 
   Example Call:
-  ``` http://leasing-rate calculator.herokuapp.com/?price=60000&period=48&kilometers=80000```
+  ``` http://leasing-rate-calculator.herokuapp.com/?price=60000&period=48&kilometers=80000 ```
 
   It returns an error if the lease term or period not correspond to a valid value:
 
