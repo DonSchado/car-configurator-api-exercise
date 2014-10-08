@@ -6,7 +6,7 @@ RSpec.describe 'all the things', type: :request do
     before { get '/cars', {}, { 'Authorization' => encode(user.email, user.password) } }
 
     context 'with permission' do
-      let!(:user) { User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true }
+      let!(:user) { FactoryGirl.create(:user, permission: true) }
 
       it 'authenticates' do
         expect(assigns(:user)).to eq(user)
@@ -14,7 +14,7 @@ RSpec.describe 'all the things', type: :request do
     end
 
     context 'w/o permission' do
-      let!(:user) { User.create! email: "l0@mycars.com", password: 'secret', level: 0, permission: false }
+      let!(:user) { FactoryGirl.create(:user, permission: false) }
 
       it "says go away!" do
         expect(response.status).to eq(401)
@@ -24,7 +24,7 @@ RSpec.describe 'all the things', type: :request do
 
 
   describe 'cars endpoint' do
-    let(:user) { User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true }
+    let(:user) { FactoryGirl.create(:user) }
     let!(:car_1) { Car.create!(levels: [3]   , description: "Audi A3 Sportback S line 1.8 TFSI 6 speed", price_cents: 3400000) }
     let!(:car_2) { Car.create!(levels: [2,3] , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000) }
 
@@ -38,7 +38,7 @@ RSpec.describe 'all the things', type: :request do
 
 
   describe 'car_config' do
-    let(:user) { User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true }
+    let(:user) { FactoryGirl.create(:user) }
     let!(:car_1) { Car.create!(levels: [3]   , description: "Audi A3 Sportback S line 1.8 TFSI 6 speed", price_cents: 3400000) }
 
     describe '#create' do
@@ -120,7 +120,7 @@ RSpec.describe 'all the things', type: :request do
   end
 
   describe 'order the car_config' do
-    let(:user) { User.create! email: "l1@mycars.com", password: 'secret', level: 1, permission: true }
+    let(:user) { FactoryGirl.create(:user) }
     let(:car) { Car.create!(levels: [2,3] , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000) }
     let(:car_config) { CarConfig.create!(car_id: car.id, leasing_period: 24, leasing_km: 100000, package: 'p1', leasing_rate_cents: 1000) }
     let(:order) do
