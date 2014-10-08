@@ -1,7 +1,4 @@
-# Exercise Time!
----
-
-## Company car order for employees
+# Exercise: Company car order for employees
 
 A company wants to supply company cars for employees in various management positions. With a leasing company, an agreement was concluded to cover financing, insurance, claims management and fuel card handling. The company offers its employees advance calculated vehicle configurations, which can be supplemented by staff to individual equipment details.
 
