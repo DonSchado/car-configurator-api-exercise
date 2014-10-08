@@ -77,24 +77,44 @@ RSpec.describe 'all the things', type: :request do
         end
       end
 
-      context 'invalid because of users leasing_rate_limit' do
+      context 'invalid because of validations' do
         let!(:user) { User.create! email: "l3@mycars.com", password: 'secret', level: 3, permission: true }
         let!(:car_2) { Car.create!(levels: [2,3] , description: "Audi A4 Avant Black Edition 2.0 TDI multitronic ", price_cents: 3200000) }
 
-        let(:car_config) do
-          {
-            car_id: car_2.id,
-            leasing_period: 24,
-            leasing_km: 20_000,
-            package: 'p2',
-          }
+        describe 'users leasing_rate_limit' do
+          let(:car_config) do
+            {
+              car_id: car_2.id,
+              leasing_period: 24,
+              leasing_km: 20_000,
+              package: 'p1',
+            }
+          end
+
+          it 'exceeds the the limit' do
+            post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
+            expect(response.status).to eq(422)
+            expect(json(response.body)).to eq(leasing_limit: ['over limit'])
+          end
         end
 
-        it 'exceeds the users leasing_rate_limit' do
-          post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
-          expect(response.status).to eq(422)
-          expect(json(response.body)).to eq(leasing_limit: ['over limit'])
+        describe 'users package level' do
+          let(:car_config) do
+            {
+              car_id: car_2.id,
+              leasing_period: 48,
+              leasing_km: 10_000,
+              package: 'p2',
+            }
+          end
+
+          it 'is not allowed package' do
+            post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
+            expect(response.status).to eq(422)
+            expect(json(response.body)).to eq(package_error: ['p2 not allowed'])
+          end
         end
+
       end
     end
   end
@@ -110,7 +130,7 @@ RSpec.describe 'all the things', type: :request do
       }
     end
 
-    it 'exceeds the users leasing_rate_limit' do
+    it 'has status created' do
       post "/car_configs/#{car_config.id}/order", { order: order }, { 'Authorization' => encode(user.email, user.password) }
       expect(response.status).to eq(201)
       expect(json(response.body)).to match(id: be_a(Integer), status: 'created', car_house: 'foo', address: 'somewhere')

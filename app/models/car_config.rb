@@ -18,7 +18,8 @@ class CarConfig < ActiveRecord::Base
   end
 
   def validate_for_user(user)
-    errors.add(:leasing_limit, 'over limit') if leasing_rate > user.limit
+    errors.add(:leasing_limit, 'over limit')             if leasing_rate > user.limit
+    errors.add(:package_error, "#{package} not allowed") unless user.allowed_package?(package)
   end
 
   def connection
