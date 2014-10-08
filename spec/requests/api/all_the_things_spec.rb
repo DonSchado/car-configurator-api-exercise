@@ -53,7 +53,7 @@ RSpec.describe 'all the things', type: :request do
           }
         end
 
-        it 'create some config for you' do
+        it 'create some config for you', :vcr do
           post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
           expect(response.status).to eq(201)
           expect(json(response.body)[:leasing_rate]).to eq("€708.00")
@@ -70,7 +70,7 @@ RSpec.describe 'all the things', type: :request do
           }
         end
 
-        it 'is unprocessable' do
+        it 'is unprocessable', :vcr do
           post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
           expect(response.status).to eq(422)
           expect(json(response.body)).to eq(:base => ["Illegal number of kilometers (2112)", "Illegal period (2132)"])
@@ -91,7 +91,7 @@ RSpec.describe 'all the things', type: :request do
             }
           end
 
-          it 'exceeds the the limit' do
+          it 'exceeds the the limit', :vcr do
             post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
             expect(response.status).to eq(422)
             expect(json(response.body)).to eq(leasing_limit: ['over limit'])
@@ -108,7 +108,7 @@ RSpec.describe 'all the things', type: :request do
             }
           end
 
-          it 'is not allowed package' do
+          it 'is not allowed package', :vcr do
             post '/car_configs', { car_config: car_config } , { 'Authorization' => encode(user.email, user.password) }
             expect(response.status).to eq(422)
             expect(json(response.body)).to eq(package_error: ['p2 not allowed'])

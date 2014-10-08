@@ -17,4 +17,6 @@ group :test, :development do
   gem 'pry'
   gem 'database_cleaner'
   gem 'guard-rspec'
+  gem 'vcr'
+  gem 'webmock'
 end
